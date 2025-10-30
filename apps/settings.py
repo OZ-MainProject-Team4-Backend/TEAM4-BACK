@@ -43,8 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # user
-    'apps.users',
+    # 사용자 앱
+    "apps.users",
+    "apps.recommend",
     # JWT
     "rest_framework",
     "rest_framework_simplejwt",
