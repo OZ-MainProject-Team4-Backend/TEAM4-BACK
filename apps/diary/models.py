@@ -1,5 +1,5 @@
-from AWS.users.models import User
-from AWS.weather.models import WeatherData
+from apps.users.models import User
+from apps.weather.models import WeatherData
 from django.db import models
 from django.utils import timezone
 
