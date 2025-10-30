@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # user
     'apps.users',
     'apps.locations',
+    'apps.weather',
     # 사용자 앱
     "apps.recommend",
     # JWT
