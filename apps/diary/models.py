@@ -3,6 +3,22 @@ from apps.weather.models import WeatherData
 from django.db import models
 from django.utils import timezone
 
+class SoftDeleteMixin(models.Model):
+    """Soft Delete Mixin"""
+
+    deleted_at = models.DateTimeField(blank=True, null=True)  # 삭제 시각 (Soft Delete)
+
+    class Meta:
+        abstract = True  # DB 테이블 생성 안 함
+
+    def delete(self, using=None, keep_parents=False):
+        self.deleted_at = timezone.now()  # 실제 삭제 대신 삭제 시각 기록
+        self.save()
+
+    def restore(self):
+        self.deleted_at = None  # 삭제 복구
+        self.save()
+
 
 class Diary(models.Model):
     id = models.AutoField(primary_key=True)
@@ -24,7 +40,3 @@ class Diary(models.Model):
 
     def __str__(self):
         return str(self.date)
-
-    def delete(self, using=None, keep_parents=False):
-        self.deleted_at = timezone.now()
-        self.save()
