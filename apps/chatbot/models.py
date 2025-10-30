@@ -32,7 +32,7 @@ class AiModelSettings(models.Model):
     updated_at = models.DateTimeField(auto_now=True)  # 수정시각
 
     class Meta:
-        db_table = "ai_model_settings"  # 실제 DB에 저장될 이름
+        db_table = "ai_model_setting"  # 실제 DB에 저장될 이름
         indexes = [
             models.Index(fields=["active"]),
             models.Index(fields=["weather_condition"]),

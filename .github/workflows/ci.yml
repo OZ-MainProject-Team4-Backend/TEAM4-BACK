@@ -17,6 +17,7 @@ jobs:
           POSTGRES_DB: team4-aws
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: 1234
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         ports:
           - 5432:5432
         options: >-
