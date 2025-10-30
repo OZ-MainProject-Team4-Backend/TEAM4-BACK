@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     # 배포
     "drf_spectacular",
     "drf_yasg",
-
     "locations",
 ]
 

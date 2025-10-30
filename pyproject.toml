@@ -96,9 +96,6 @@ mypy_path = ["."]
 
 [tool.django-stubs]
 django_settings_module = "apps.settings"
-<<<<<<< HEAD
-strict_settings = false
-=======
 strict_settings = false
 apps = [
     "django.contrib.admin",
@@ -113,4 +110,4 @@ apps = [
     "drf_spectacular",
     "drf_yasg",
 ]
->>>>>>> main
+
