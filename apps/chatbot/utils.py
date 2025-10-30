@@ -3,7 +3,7 @@ import os
 from openai import OpenAI
 from openai.types.chat import ChatCompletion, ChatCompletionMessageParam
 
-client = OpenAI(api_key=os.getenv("GPT_API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 def ask_gpt(prompt: str) -> str:
