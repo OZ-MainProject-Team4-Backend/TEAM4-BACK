@@ -27,7 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # chat
-    path("api/chat/", include("apps.chat.urls")),
+    path("api/chat/", include("apps.chatbot.urls")),
     # swagger
     path(
         "api/schema/swagger-ui/",
