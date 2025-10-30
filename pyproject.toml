@@ -35,6 +35,7 @@ dependencies = [
     "jsonschema-specifications==2025.9.1",
     "mypy==1.18.2",
     "mypy-extensions==1.1.0",
+    "openai>=2.6.1",
     "packaging==25.0",
     "pathspec==0.12.1",
     "platformdirs==4.5.0",
@@ -91,5 +92,5 @@ ignore_missing_imports = true
 strict_optional = true
 
 [tool.django-stubs]
-django_settings_module = "AWS.settings"
+django_settings_module = "apps.settings"
 strict_settings = false
