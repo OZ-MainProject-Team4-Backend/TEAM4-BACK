@@ -57,3 +57,38 @@ class Location(models.Model):
 
 
 class FavoriteLocation(SoftDeleteMixin):
+    """
+    사용자별 즐겨찾기 위치 관리 테이블
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="favorite_locations",  # 역참조: user.favorite_locations.all()
+    )
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.CASCADE,
+        related_name="favorited_by",  # 역참조: location.favorite_by.all()
+    )
+    alias = models.CharField(max_length=100, blank=True, null=True)  # 별칭 (예: 집, 회사)
+    is_default = models.BooleanField(default=False)  # 기본 위치 여부
+    created_at = models.DateTimeField(auto_now_add=True)  # 생성 시각
+    updated_at = models.DateTimeField(auto_now=True)  # 수정 시각
+
+    class Meta:
+        db_table = "favorite_locations"
+        verbose_name = "Favorite Location"
+        verbose_name_plural = "Favorite Locations"
+        constraints = [
+            # 한 유저는 같은 위치를 중복 등록할 수 없음
+            models.UniqueConstraint(fields=["user", "location"], name="uq_user_location"),
+            # 기본 위치는 유저당 하나만 가능
+            models.UniqueConstraint(
+                fields=["user"],
+                condition=models.Q(is_default=True),
+                name="uq_user_default_location",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.user.nickname} - {self.alias or self.location.city}"
