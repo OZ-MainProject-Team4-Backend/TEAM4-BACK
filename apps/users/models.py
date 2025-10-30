@@ -45,7 +45,7 @@ class User(models.Model):
     def is_active(self):
         return self.deleted_at is None
 
-
+#이메일 검증
 class EmailVerification(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
