@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # user
     'apps.users',
-    #diary
+    # diary
     'apps.diary',
     # JWT
     "rest_framework",
