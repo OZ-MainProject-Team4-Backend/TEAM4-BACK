@@ -90,7 +90,21 @@ dev = [
 plugins = ["mypy_django_plugin.main"]
 ignore_missing_imports = true
 strict_optional = true
+mypy_path = ["apps"]
 
 [tool.django-stubs]
 django_settings_module = "apps.settings"
 strict_settings = false
+apps = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "apps.users",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "drf_spectacular",
+    "drf_yasg",
+]
