@@ -170,6 +170,19 @@ class DashboardStats(models.Model):
     class Meta:
         db_table = "dashboard_stats"
 
+    @classmethod
+    def update_daily_status(cls):
+        today = timezone.localdate()
+        total_users = User.objects.filter(deleted_at__isnull=True).count()
+        total_diaries = 0
+        api_calls = 0
+
+        stat, created = cls.objects.get_or_create(stat_date=today)
+        stat.total_users = total_users
+        stat.total_diaries = total_diaries
+        stat.api_calls = api_calls
+        stat.save()
+
 
 class SystemSettings(models.Model):
     key = models.CharField(max_length=150, unique=True)
