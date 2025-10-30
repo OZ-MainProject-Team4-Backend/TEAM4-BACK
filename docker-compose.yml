@@ -1,0 +1,28 @@
+services:
+  aws-db:
+    image: postgres:15-alpine
+    container_name: team4-aws
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data_aws:/var/lib/postgresql/data
+
+  aws-web:
+    build: .
+    container_name: team4-aws-web
+    restart: always
+
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - aws-db
+    volumes:
+      - .:/AWS
+
+volumes:
+  postgres_data_aws:
