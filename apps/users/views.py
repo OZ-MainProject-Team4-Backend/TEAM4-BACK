@@ -250,12 +250,15 @@ class TokenListView(generics.ListAPIView):
 
 
 # 토큰 리프레쉬
+from typing import Any, Tuple
+
+
 class CustomTokenRefreshView(TokenRefreshView):
-    permission_classes = [AllowAny]
+    permission_classes: Tuple[Any, ...] = (AllowAny,)
 
 
 class TokenRevokeView(generics.GenericAPIView):
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = (IsAdminUser,)
 
     def post(self, request, *args, **kwargs):
         token_id = request.data.get("token_id")
@@ -274,7 +277,7 @@ class TokenRevokeView(generics.GenericAPIView):
 # 네이버 로그인
 # 추후 구글,카카오 구현 할 것
 class NaverLoginView(generics.GenericAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = permissions.AllowAny
 
     def post(self, request, *args, **kwargs):
         code = request.data.get("code")
