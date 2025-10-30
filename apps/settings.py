@@ -43,13 +43,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # user
     'apps.users',
+    'apps.locations',
     # JWT
     "rest_framework",
     "rest_framework_simplejwt",
     # 배포
     "drf_spectacular",
     "drf_yasg",
-    "locations",
 ]
 
 MIDDLEWARE = [

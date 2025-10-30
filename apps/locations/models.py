@@ -78,7 +78,7 @@ class FavoriteLocation(SoftDeleteMixin):
     location = models.ForeignKey(
         Location,
         on_delete=models.CASCADE,
-        related_name="favorited_by",  # 역참조: location.favorite_by.all()
+        related_name="favorited_by",  # 역참조: location.favorited_by.all()
     )
     alias = models.CharField(
         max_length=100, blank=True, null=True
