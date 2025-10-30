@@ -261,6 +261,15 @@ wheels = [
 ]
 
 [[package]]
+name = "generics"
+version = "7.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6d/e2/0141ca0324eb301b88a0970b27658993ad134d7b47c9e8ad2428c6404feb/generics-7.0.0.tar.gz", hash = "sha256:abd5c0fe619f02ee3340bf4b29f90dce9bd7bea88b3e4a369c8c2563014eab9c", size = 4359, upload-time = "2024-04-19T10:25:45.024Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0a/df/400511e2fc8aadc5e2b205fddaeb9798f621b0cccdd9e933e97090e1f24f/generics-7.0.0-py2.py3-none-any.whl", hash = "sha256:ab22c13f2adf4d65402ca448494c9561b762e56316971f6528eada6a82e16619", size = 5401, upload-time = "2024-04-19T10:25:43.908Z" },
+]
+
+[[package]]
 name = "google-auth"
 version = "2.42.0"
 source = { registry = "https://pypi.org/simple" }
@@ -753,6 +762,7 @@ dependencies = [
     { name = "dotenv" },
     { name = "drf-spectacular" },
     { name = "drf-yasg" },
+    { name = "generics" },
     { name = "google-auth" },
     { name = "google-genai" },
     { name = "gunicorn" },
@@ -821,6 +831,7 @@ requires-dist = [
     { name = "dotenv", specifier = "==0.9.9" },
     { name = "drf-spectacular", specifier = "==0.28.0" },
     { name = "drf-yasg", specifier = "==1.21.11" },
+    { name = "generics", specifier = ">=7.0.0" },
     { name = "google-auth", specifier = "==2.42.0" },
     { name = "google-genai", specifier = "==1.47.0" },
     { name = "gunicorn", specifier = "==23.0.0" },
