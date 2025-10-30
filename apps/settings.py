@@ -42,10 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Users
+    # 사용자 앱
     "apps.users",
-    "apps.recommend", 
-  
+    "apps.recommend",
+
     # JWT
     "rest_framework",
     "rest_framework_simplejwt",
