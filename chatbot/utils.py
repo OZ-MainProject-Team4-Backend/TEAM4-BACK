@@ -20,4 +20,4 @@ def ask_gpt(prompt: str) -> str:
         temperature=1.0,
     )
 
-    return response.choices[0].message.content.strip()
+    return (response.choices[0].message.content or "").strip()
