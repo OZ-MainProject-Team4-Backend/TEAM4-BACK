@@ -90,7 +90,9 @@ dev = [
 plugins = ["mypy_django_plugin.main"]
 ignore_missing_imports = true
 strict_optional = true
-mypy_path = ["apps"]
+explicit_package_bases = true
+namespace_packages = true
+mypy_path = ["."]
 
 [tool.django-stubs]
 django_settings_module = "apps.settings"
