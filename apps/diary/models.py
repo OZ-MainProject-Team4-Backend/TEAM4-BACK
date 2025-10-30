@@ -1,7 +1,9 @@
-from apps.users.models import User
-from apps.weather.models import WeatherData
 from django.db import models
 from django.utils import timezone
+
+from apps.users.models import User
+from apps.weather.models import WeatherData
+
 
 class SoftDeleteMixin(models.Model):
     """Soft Delete Mixin"""
