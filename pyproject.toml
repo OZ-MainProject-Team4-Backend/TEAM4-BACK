@@ -92,5 +92,5 @@ ignore_missing_imports = true
 strict_optional = true
 
 [tool.django-stubs]
-django_settings_module = "AWS.settings"
+django_settings_module = "apps.settings"
 strict_settings = false
