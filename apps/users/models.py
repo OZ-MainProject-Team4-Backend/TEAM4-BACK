@@ -9,7 +9,7 @@ from django.utils import timezone
 from .utils.send_email import send_verification_email
 
 
-#유저입력창
+# 유저입력창
 class User(models.Model):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=150, unique=True, null=False)
