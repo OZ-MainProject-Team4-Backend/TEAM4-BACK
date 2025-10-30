@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.locations',
     # 사용자 앱
-    "apps.users",
     "apps.recommend",
     # JWT
     "rest_framework",
