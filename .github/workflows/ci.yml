@@ -14,7 +14,7 @@ jobs:
       postgres:
         image: postgres:13
         env:
-          POSTGRES_DB: AWS
+          POSTGRES_DB: team4-aws
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: 1234
         ports:
