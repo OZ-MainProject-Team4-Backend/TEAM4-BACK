@@ -112,3 +112,4 @@ apps = [
     "drf_spectacular",
     "drf_yasg",
 ]
+
