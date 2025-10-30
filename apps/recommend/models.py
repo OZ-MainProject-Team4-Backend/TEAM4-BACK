@@ -1,12 +1,12 @@
-from django.db import models
 from django.conf import settings
-
+from django.db import models
 
 User = settings.AUTH_USER_MODEL
 
 
 class AIModelSettings(models.Model):
     """AI 추천 모델 설정 테이블"""
+
     name = models.CharField(max_length=150)
     temperature_min = models.FloatField()
     temperature_max = models.FloatField()
@@ -27,10 +27,15 @@ class AIModelSettings(models.Model):
 
 class OutfitRecommendation(models.Model):
     """날씨 기반 코디 추천 결과"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recommendations")
-    model_setting_id = models.ForeignKey(AIModelSettings, on_delete=models.SET_NULL, null=True, blank=True)
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="recommendations"
+    )
+    model_setting_id = models.ForeignKey(
+        AIModelSettings, on_delete=models.SET_NULL, null=True, blank=True
+    )
     weather_data_id = models.IntegerField(null=True, blank=True)
-    rec_1 = models.TextField() # 필수
+    rec_1 = models.TextField()  # 필수
     rec_2 = models.TextField(blank=True, null=True)
     rec_3 = models.TextField(blank=True, null=True)
     explanation = models.TextField(blank=True, null=True)
