@@ -16,6 +16,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
+
+GPT_API_KEY = os.getenv("GPT_API_KEY")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -43,6 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # user
     'apps.users',
+    'apps.locations',
+    # 사용자 앱
+    "apps.recommend",
     # diary
     'apps.diary',
     # JWT
