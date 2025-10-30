@@ -1,5 +1,6 @@
-from apps.chatbot.models import AiChatLogs
 from rest_framework import serializers
+
+from apps.chatbot.models import AiChatLogs
 
 
 class AiChatLogReadSerializer(serializers.ModelSerializer):
@@ -11,8 +12,9 @@ class AiChatLogReadSerializer(serializers.ModelSerializer):
             "user_question",
             "ai_answer",
             "context",
-            'created_at'
+            'created_at',
         ]
+
 
 class SessionSummarySerializer(serializers.Serializer):
     session_id = serializers.UUIDField()
