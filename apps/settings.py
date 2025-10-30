@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'apps.weather',
     # 사용자 앱
     "apps.recommend",
+    # diary
+    'apps.diary',
     # JWT
     "rest_framework",
     "rest_framework_simplejwt",
