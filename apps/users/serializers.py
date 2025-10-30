@@ -20,6 +20,7 @@ from .models import (
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False, allow_null=True)
     is_active = serializers.SerializerMethodField(read_only=True)
+    favorite_locations = serializers.JSONField(required=False)
 
     class Meta:
         model = User
@@ -38,6 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
             "is_active",
+            "favorite_locations",
         ]
         read_only_fields = (
             "email_verified",
