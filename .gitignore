@@ -267,4 +267,5 @@ pyrightconfig.json
 
 envs/
 .idea/
-.env
+.env.local
+.env.prod
