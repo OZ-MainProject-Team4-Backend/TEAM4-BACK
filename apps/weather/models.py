@@ -53,7 +53,7 @@ class WeatherData(SoftDeleteMixin):
     # 기상 수치
     temperature = models.DecimalField(max_digits=5, decimal_places=2)  # 기온(°C)
     feels_like = models.DecimalField(max_digits=5, decimal_places=2)  # 체감온도(°C)
-    humidity = models.PositiveSmallIntegerField()  # 습도(%)
+    humidity = models.PositiveSmallIntegerField()  # 습도(%) - 정수형
     rain_probability = models.DecimalField(
         max_digits=5, decimal_places=2, default=0
     )  # 강수확률(%)
@@ -110,8 +110,8 @@ class WeatherDailySummary(SoftDeleteMixin):
     temperature_max = models.DecimalField(
         max_digits=5, decimal_places=2
     )  # 최고 기온(°C)
-    humidity_min = models.DecimalField(max_digits=5, decimal_places=2)  # 최저 습도(%)
-    humidity_max = models.DecimalField(max_digits=5, decimal_places=2)  # 최고 습도(%)
+    humidity_min = models.PositiveSmallIntegerField()  # 최저 습도(%)
+    humidity_max = models.PositiveSmallIntegerField()  # 최고 습도(%)
     dominant_condition = models.CharField(
         max_length=100
     )  # 하루 중 가장 많이 나타난 상태 (예: Cloudy)
