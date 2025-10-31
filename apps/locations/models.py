@@ -25,15 +25,12 @@ class SoftDeleteMixin(models.Model):
 class Location(models.Model):
     """
     지역 및 좌표 정보 테이블
-    - 도시, 구, 동 단위까지 지역 정보를 저장
+    - 도시, 구 지역 정보를 저장
     - 위도(latitude), 경도(longitude)는 UNIQUE
     """
 
     city = models.CharField(max_length=50)  # 도시명 (예: 서울특별시)
     district = models.CharField(max_length=50)  # 구 단위 (예: 강남구)
-    subdistrict = models.CharField(
-        max_length=50, blank=True, null=True
-    )  # 동 단위 (예: 역삼동)
     latitude = models.DecimalField(
         max_digits=10, decimal_places=7
     )  # 위도 (예: 37.5665)
@@ -61,8 +58,7 @@ class Location(models.Model):
         ]
 
     def __str__(self):
-        parts = [self.city, self.district, self.subdistrict]
-        return " ".join([p for p in parts if p])  # ex) 서울특별시 강남구 역삼동
+        return f"{self.city} {self.district}"
 
 
 class FavoriteLocation(SoftDeleteMixin):
@@ -71,38 +67,38 @@ class FavoriteLocation(SoftDeleteMixin):
     """
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="favorite_locations",  # 역참조: user.favorite_locations.all()
+        User, on_delete=models.CASCADE, related_name="favorite_locations"
     )
     location = models.ForeignKey(
-        Location,
-        on_delete=models.CASCADE,
-        related_name="favorited_by",  # 역참조: location.favorited_by.all()
+        Location, on_delete=models.CASCADE, related_name="favorited_by"
     )
     alias = models.CharField(
         max_length=100, blank=True, null=True
     )  # 별칭 (예: 집, 회사)
     is_default = models.BooleanField(default=False)  # 기본 위치 여부
-    created_at = models.DateTimeField(auto_now_add=True)  # 생성 시각
-    updated_at = models.DateTimeField(auto_now=True)  # 수정 시각
+    created_at = models.DateTimeField(auto_now_add=True)  # 처음 생성된 시각
+    updated_at = models.DateTimeField(auto_now=True)  # 수정될때 마다 자동 업데이트
 
     class Meta:
-        db_table = "favorite_locations"
+        db_table = "favorite_locations"  # 실제 DB 테이블 명
         verbose_name = "Favorite Location"
         verbose_name_plural = "Favorite Locations"
         constraints = [
-            # 한 유저는 같은 위치를 중복 등록할 수 없음
             models.UniqueConstraint(
-                fields=["user", "location"], name="uq_user_location"
+                fields=["user", "location"],
+                name="uq_user_location",  # 동일 사용자가 같은 위치 중복 등록 금지
             ),
-            # 기본 위치는 유저당 하나만 가능
             models.UniqueConstraint(
-                fields=["user"],
+                fields=["user"],  # 기본 위치는 한 개만!
                 condition=models.Q(is_default=True),
                 name="uq_user_default_location",
             ),
         ]
 
     def __str__(self):
-        return f"{self.user.nickname} - {self.alias or self.location.city}"
+        """
+        관리자 화면에 사용됨
+        예시: "user@example.com - 서울특별시 강남구 (집)"
+        """
+        alias = f"({self.alias})" if self.alias else ""
+        return f"{self.user} - {self.location.city} {self.location.district} {alias}"
