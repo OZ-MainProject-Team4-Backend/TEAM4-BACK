@@ -5,6 +5,7 @@ import requests
 from django.contrib.auth.hashers import check_password, make_password
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, permissions, status
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -23,9 +24,13 @@ from .models import (
 from .serializers import (
     AdminActionSerializer,
     AdminUserSerializer,
+    ConfirmEmailSerializer,
     DashboardStatsSerializer,
     EmailVerificationRequestSerializer,
+    LogoutSerializer,
+    SocialAccountSerializer,
     SystemSettingsSerializer,
+    TokenRevokeSerializer,
     TokenSerializer,
     UserSerializer,
 )
@@ -84,6 +89,7 @@ class RequestEmailVerificationView(generics.GenericAPIView):
 
 class ConfirmEmailView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    serializer_class = ConfirmEmailSerializer
 
     def post(self, request, *args, **kwargs):
         token_code = request.data.get("token") or request.GET.get("token")
@@ -178,6 +184,7 @@ class LoginView(generics.GenericAPIView):
 
 class LogoutView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = LogoutSerializer
 
     def post(self, request, *args, **kwargs):
         refresh_token = request.data.get("refresh")
@@ -242,25 +249,25 @@ class TokenListView(generics.ListAPIView):
     serializer_class = TokenSerializer
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(description="토큰 리스트 조회", tags=["Token"])
     def get_queryset(self):
+        # swagger 등 request 없는 경우 안전하게 빈 queryset 반환
+        if getattr(self, "swagger_fake_view", False):
+            return Token.objects.none()
+
         user = self.request.user
-        return (
-            Token.objects.all().order_by("-created_at")
-            if getattr(user, "is_staff", False)
-            else Token.objects.filter(user=user).order_by("-created_at")
-        )
-
-
-# 토큰 리프레쉬
-from typing import Any, Tuple
+        if getattr(user, "is_staff", False):
+            return Token.objects.all().order_by("-created_at")
+        return Token.objects.filter(user=user).order_by("-created_at")
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-    permission_classes: Tuple[Any, ...] = (AllowAny,)
+    permission_classes = (AllowAny,)  # type: ignore[assignment]
 
 
 class TokenRevokeView(generics.GenericAPIView):
-    permission_classes = (IsAdminUser,)
+    permission_classes = [IsAdminUser]
+    serializer_class = TokenRevokeSerializer
 
     def post(self, request, *args, **kwargs):
         token_id = request.data.get("token_id")
@@ -280,6 +287,7 @@ class TokenRevokeView(generics.GenericAPIView):
 # 추후 구글,카카오 구현 할 것
 class NaverLoginView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    serializer_class = SocialAccountSerializer
 
     def post(self, request, *args, **kwargs):
         code = request.data.get("code")
@@ -363,6 +371,7 @@ class NaverLoginView(generics.GenericAPIView):
 
 class GoogleLoginView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    serializer_class = SocialAccountSerializer
 
     def post(self, request, *args, **kwargs):
         code = request.data.get("code")
