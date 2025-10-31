@@ -34,6 +34,8 @@ from .utils.send_email import send_verification_email
 
 NAVER_CLIENT_ID = os.getenv('NAVER_CLIENT_ID')
 NAVER_CLIENT_SECRET = os.getenv('NAVER_CLIENT_SECRET')
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = os.getenv('GOOGLE_CLIENT_SECRET')
 
 
 # 이메일 인증
@@ -359,6 +361,88 @@ class NaverLoginView(generics.GenericAPIView):
         )
 
 
+class GoogleLoginView(generics.GenericAPIView):
+    permission_classes = permissions.AllowAny
+
+    def post(self, request, *args, **kwargs):
+        code = request.data.get("code")
+        state = request.data.get("state")
+        if not code or not state:
+            return Response({"code/state 누락"}, 400)
+
+        google_client_id = os.getenv("GOOGLE_CLIENT_ID")
+        google_client_secret = os.getenv("GOOGLE_CLIENT_SECRET")
+
+        if not google_client_id or not google_client_secret:
+            return Response({"error": "서버 환경변수 미설정"}, 500)
+        token_url = "https://oauth2.googleapis.com/token"
+        token_data = {
+            "code": code,
+            "client_id": GOOGLE_CLIENT_ID,
+            "client_secret": GOOGLE_CLIENT_SECRET,
+            "redirect_uri": "http://localhost:8000/login/google/callback",
+            "grant_type": "authorization_code",
+        }
+
+        try:
+            token_res = requests.post(token_url, data=token_data, timeout=5)
+            token_res.raise_for_status()
+            token_json = token_res.json()
+        except requests.RequestException as e:
+            return Response({"error": "토큰 요청 실패", "detail": str(e)}, 400)
+
+        access_token = token_json.get("access_token")
+        if not access_token:
+            return Response({"error": "토큰 요청 실패", "detail": token_json}, 400)
+
+        # 2. access token으로 사용자 정보 조회
+        user_info_url = "https://www.googleapis.com/oauth2/v2/userinfo"
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        try:
+            profile_res = requests.get(user_info_url, headers=headers, timeout=5)
+            profile_res.raise_for_status()
+            profile_data = profile_res.json()
+        except requests.RequestException as e:
+            return Response({"error": "프로필 요청 실패", "detail": str(e)}, 400)
+
+        # 3. 사용자 정보 DB에 저장
+        email = profile_data.get("email")
+        name = profile_data.get("name")
+        provider_user_id = profile_data.get("id")
+
+        if not email or not provider_user_id:
+            return Response({"error": "이메일/ID 정보 없음"}, 400)
+
+        user, _ = User.objects.get_or_create(
+            email=email,
+            defaults={"nickname": name, "email_verified": True, "password": "!"},
+        )
+        SocialAccount.objects.get_or_create(
+            user=user, provider="google", provider_user_id=provider_user_id
+        )
+
+        # 4. JWT 생성 및 DB 저장
+        refresh = RefreshToken.for_user(user)
+        Token.objects.create(
+            user=user,
+            access_jwt=str(refresh.access_token),
+            refresh_jwt=str(refresh),
+            access_expires_at=timezone.now() + timedelta(minutes=5),
+            refresh_expires_at=timezone.now() + timedelta(days=7),
+        )
+
+        return Response(
+            {
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+                "email": user.email,
+                "nickname": user.nickname,
+            },
+            200,
+        )
+
+
 # 어드민 기능
 class AdminUserListView(generics.ListAPIView):
     serializer_class = AdminUserSerializer
@@ -430,15 +514,15 @@ class AdminActionCreateView(generics.CreateAPIView):
             created_at=timezone.now(),
         )
 
-        def create(self, request, *args, **kwargs):
-            serializer = self.get_serializer(data=request.data)
-            if not serializer.is_valid():
-                return Response(
-                    {"error": serializer.errors, "error_status": "invalid_data"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            self.perform_create(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {"error": serializer.errors, "error_status": "invalid_data"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class AdminActionListView(generics.ListAPIView):
