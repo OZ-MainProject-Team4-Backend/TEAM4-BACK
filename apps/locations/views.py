@@ -1,17 +1,17 @@
-from rest_framework import generics, viewsets, status
-from rest_framework.response import Response
+from rest_framework import generics, status, viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from .models import Location, FavoriteLocation
-from .serializers import LocationSerializer, FavoriteLocationSerializer
+from .models import FavoriteLocation, Location
+from .serializers import FavoriteLocationSerializer, LocationSerializer
 
 
 # 좌표 기반 지역 검색
 class LocationSearchView(generics.GenericAPIView):
     """
-     GET /api/location/search?lat=&lon=
-     위도(lat), 경도(lon)를 쿼리로 받아 DB에서 해당 위치 조회
-     city, district, latitude, longitude 반환
+    GET /api/location/search?lat=&lon=
+    위도(lat), 경도(lon)를 쿼리로 받아 DB에서 해당 위치 조회
+    city, district, latitude, longitude 반환
     """
 
     queryset = Location.objects.all()
@@ -73,10 +73,8 @@ class FavoriteLocationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """현재 로그인한 사용자 데이터만 조회"""
         return FavoriteLocation.objects.filter(
-            user=self.request.user,
-            deleted_at__isnull=True
+            user=self.request.user, deleted_at__isnull=True
         ).select_related("location")
-
 
     def perform_create(self, serializer):
         """중복 등록 방지 + 기본위치 처리"""
@@ -84,7 +82,9 @@ class FavoriteLocationViewSet(viewsets.ModelViewSet):
         location = serializer.validated_data.get("location")
 
         # 동일 위치 중복 방지
-        if FavoriteLocation.objects.filter(user=user, location=location, deleted_at__isnull=True).exists():
+        if FavoriteLocation.objects.filter(
+            user=user, location=location, deleted_at__isnull=True
+        ).exists():
             return Response(
                 {"error": "중복 등록", "error_status": "favorite_duplicate"},
                 status=status.HTTP_409_CONFLICT,
@@ -96,10 +96,7 @@ class FavoriteLocationViewSet(viewsets.ModelViewSet):
         """Soft Delete (deleted_at 기록)"""
         instance = self.get_object()
         instance.delete()
-        return Response(
-            {"message": "삭제 완료"},
-            status=status.HTTP_204_NO_CONTENT
-            )
+        return Response({"message": "삭제 완료"}, status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, *args, **kwargs):
         """별칭 수정 or 기본 위치 설정"""
@@ -112,7 +109,9 @@ class FavoriteLocationViewSet(viewsets.ModelViewSet):
 
         if is_default is not None:
             # 기존 기본 위치를 해제
-            FavoriteLocation.objects.filter(user=request.user, is_default=True).update(is_default=False)
+            FavoriteLocation.objects.filter(user=request.user, is_default=True).update(
+                is_default=False
+            )
             instance.is_default = is_default
 
         instance.save()
