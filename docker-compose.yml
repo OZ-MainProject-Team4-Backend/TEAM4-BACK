@@ -4,7 +4,7 @@ services:
     container_name: team4-aws
     restart: always
     env_file:
-      - .env.local
+      - .env.local.local
     ports:
       - "${DB_PORT:-5432}:5432"
     volumes:
@@ -16,7 +16,7 @@ services:
     restart: always
 
     env_file:
-      - .env.local
+      - .env.local.local
     ports:
       - "8000:8000"
     depends_on:
