@@ -25,7 +25,7 @@ from drf_spectacular.views import (
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # chat
     path("api/chat/", include("apps.chatbot.urls")),
@@ -44,4 +44,5 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/users/", include("apps.users.urls", namespace="users")),
     path("api/location/", include("apps.locations.urls")),
+    path("api/diary/", include("apps.diary.urls", namespace="diary")),
 ]
