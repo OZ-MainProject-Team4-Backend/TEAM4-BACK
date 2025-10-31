@@ -1,6 +1,7 @@
 # serializers.py
 from django.contrib.auth.hashers import make_password
 from django.utils import timezone
+from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 
 from .models import (
@@ -49,7 +50,8 @@ class UserSerializer(serializers.ModelSerializer):
             "is_superuser",
         )
 
-    def get_is_active(self, obj):
+    @extend_schema_field(serializers.BooleanField)
+    def get_is_active(self, obj) -> bool:
         return obj.is_active
 
     def validate_email(self, value):
@@ -82,6 +84,10 @@ class UserSerializer(serializers.ModelSerializer):
             instance.password = make_password(password)
             instance.save()
         return super().update(instance, validated_data)
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
 
 
 # ---------------------------
@@ -223,3 +229,10 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
         if " " in data["new_password"]:
             raise serializers.ValidationError("비밀번호에 공백을 포함할 수 없습니다.")
         return data
+
+
+# ---------------------------
+# token
+# ---------------------------
+class TokenRevokeSerializer(serializers.Serializer):
+    token_id = serializers.IntegerField()
