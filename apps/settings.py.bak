@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'apps.locations',
     'apps.weather',
     # 사용자 앱
-    'apps.recommend',
+    "apps.recommend",
     # diary
     'apps.diary',
     # JWT
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_yasg",
     # chat
-    'apps.chatbot',
+    "apps.chatbot",
 ]
 
 MIDDLEWARE = [
