@@ -15,11 +15,11 @@ class SoftDeleteMixin(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         self.deleted_at = timezone.now()  # 실제 삭제 대신 삭제 시각 기록
-        self.save()
+        self.save(update_fields=["deleted_at"])
 
     def restore(self):
         self.deleted_at = None  # 삭제 복구
-        self.save()
+        self.save(update_fields=["deleted_at"])
 
 
 class Diary(models.Model):
