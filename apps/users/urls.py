@@ -20,6 +20,7 @@ from .views import (
     UserProfileView,
 )
 
+app_name = "users"
 urlpatterns = [
     # 이메일 인증
     path(
