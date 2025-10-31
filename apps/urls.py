@@ -24,6 +24,7 @@ from drf_spectacular.views import (
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+app
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
