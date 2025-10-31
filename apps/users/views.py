@@ -23,6 +23,7 @@ from .models import (
 from .serializers import (
     AdminActionSerializer,
     AdminUserSerializer,
+    ConfirmEmailSerializer,
     DashboardStatsSerializer,
     EmailVerificationRequestSerializer,
     SystemSettingsSerializer,
@@ -84,6 +85,7 @@ class RequestEmailVerificationView(generics.GenericAPIView):
 
 class ConfirmEmailView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
+    serializer_class = ConfirmEmailSerializer
 
     def post(self, request, *args, **kwargs):
         token_code = request.data.get("token") or request.GET.get("token")
@@ -256,11 +258,11 @@ from typing import Any, Tuple
 
 
 class CustomTokenRefreshView(TokenRefreshView):
-    permission_classes: Tuple[Any, ...] = (AllowAny,)
+    permission_classes: [AllowAny]
 
 
 class TokenRevokeView(generics.GenericAPIView):
-    permission_classes = (IsAdminUser,)
+    permission_classes = [IsAdminUser]
 
     def post(self, request, *args, **kwargs):
         token_id = request.data.get("token_id")

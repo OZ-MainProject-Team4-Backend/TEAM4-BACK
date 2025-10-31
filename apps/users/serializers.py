@@ -102,6 +102,10 @@ class EmailVerificationRequestSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
 
 
+class ConfirmEmailSerializer(serializers.Serializer):
+    token = serializers.CharField(required=True)
+
+
 # ---------------------------
 # SocialAccount
 # ---------------------------
