@@ -253,12 +253,8 @@ class TokenListView(generics.ListAPIView):
         )
 
 
-# 토큰 리프레쉬
-from typing import Any, Tuple
-
-
 class CustomTokenRefreshView(TokenRefreshView):
-    permission_classes: [AllowAny]
+    permission_classes = (AllowAny,)  # type: ignore[assignment]
 
 
 class TokenRevokeView(generics.GenericAPIView):
