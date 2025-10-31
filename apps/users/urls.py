@@ -7,6 +7,7 @@ from .views import (
     ConfirmEmailView,
     CustomTokenRefreshView,
     DashboardStatsListView,
+    GoogleLoginView,
     LoginView,
     LogoutView,
     NaverLoginView,
@@ -39,6 +40,7 @@ urlpatterns = [
     path("tokens/revoke/", TokenRevokeView.as_view(), name="token_revoke"),
     # 소셜 로그인
     path("login/naver/", NaverLoginView.as_view(), name="naver_login"),
+    path("login/google/", GoogleLoginView.as_view(), name="google_login"),
     # 어드민 기능
     path("admin/users/", AdminUserListView.as_view(), name="admin_user_list"),
     path(
