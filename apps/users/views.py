@@ -279,7 +279,7 @@ class TokenRevokeView(generics.GenericAPIView):
 # 네이버 로그인
 # 추후 구글,카카오 구현 할 것
 class NaverLoginView(generics.GenericAPIView):
-    permission_classes = permissions.AllowAny
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         code = request.data.get("code")
@@ -362,7 +362,7 @@ class NaverLoginView(generics.GenericAPIView):
 
 
 class GoogleLoginView(generics.GenericAPIView):
-    permission_classes = permissions.AllowAny
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         code = request.data.get("code")
